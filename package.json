@@ -1,0 +1,27 @@
+{
+  "name": "expressintro",
+  "version": "1.0.0",
+  "description": "After going through the basics of Node.js,  this will be my introduction to Express.js.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MichaelTong1/expressintro.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MichaelTong1/expressintro/issues"
+  },
+  "homepage": "https://github.com/MichaelTong1/expressintro#readme",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "ejs": "^2.6.1",
+    "express": "^4.16.3",
+    "express-async-errors": "^2.1.2",
+    "express-validator": "^5.2.0",
+    "random-puppy": "^1.1.0"
+  }
+}
