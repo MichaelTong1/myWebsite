@@ -5,13 +5,28 @@ var expressValidator = require('express-validator');
 var app = express();
 var randomPuppy = require('random-puppy');
 var doggo = randomPuppy();
+var unirest = require('unirest');
 
 
+// Blogger API
 
-
+	function getPosts () {
+	unirest.get("https://www.googleapis.com/blogger/v3/blogs/8300627851746571333/posts?key=AIzaSyA9qXj63WzU2Es8IrO1spSZL78OWLV4oWc")
+	.end(function (result) {
+		const bloginfo = [];
+		bloginfo.push(((result.body).items)[0].title);
+  		bloginfo.push(((result.body).items)[0].url);
+    	bloginfo.push(((result.body).items)[1].title);
+ 		bloginfo.push(((result.body).items)[1].url);
+      	bloginfo.push(((result.body).items)[2].title);
+ 		bloginfo.push(((result.body).items)[2].url);
+console.log(bloginfo[0]);
+	return JSON.stringify(bloginfo);
+		});
+}
+// End of Blogger API
 
 var logger = function(req, res, next) {
-	console.log('Logging...');
 	next();
 }
 
@@ -23,16 +38,20 @@ app.set('views', path.join(__dirname, 'views'));
 
 // Body Parser Middleware
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: false})); 
+//app.use(bodyParser.urlencoded({extended: false})); 
+
+
+
 
 // Set Static Path
 var publicDir = require('path').join(__dirname,'public');
 app.use(express.static(publicDir));
 
 app.get('/', function(req, res) {
+	var p = 'ay22';
 	res.render('index2', {
-		title: 'Home Page'
-
+		title: 'Home Page',
+		myPosts: p
 	});
 });
 
@@ -185,6 +204,9 @@ app.get('/nextdrivingdoggo', function(req,res) {
 	});
 
 });
+
+
+
 
 app.listen(8080, function() {
 	console.log("Server started...");
