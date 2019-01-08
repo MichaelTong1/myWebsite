@@ -6,25 +6,48 @@ var app = express();
 var randomPuppy = require('random-puppy');
 var doggo = randomPuppy();
 var unirest = require('unirest');
+var axios = require('axios');
+var events = require('events');
+var eventEmitter = new events.EventEmitter();
+var request = require("request");
 
 
 // Blogger API
-
-	function getPosts () {
-	unirest.get("https://www.googleapis.com/blogger/v3/blogs/8300627851746571333/posts?key=AIzaSyA9qXj63WzU2Es8IrO1spSZL78OWLV4oWc")
-	.end(function (result) {
-		const bloginfo = [];
-		bloginfo.push(((result.body).items)[0].title);
-  		bloginfo.push(((result.body).items)[0].url);
-    	bloginfo.push(((result.body).items)[1].title);
- 		bloginfo.push(((result.body).items)[1].url);
-      	bloginfo.push(((result.body).items)[2].title);
- 		bloginfo.push(((result.body).items)[2].url);
-console.log(bloginfo[0]);
-	return JSON.stringify(bloginfo);
-		});
+/*
+function getPosts() {
+app.get('https://www.googleapis.com/blogger/v3/blogs/8300627851746571333/posts?key=AIzaSyA9qXj63WzU2Es8IrO1spSZL78OWLV4oWc')
+.then(response => {
+console.log('axios start');
+console.log((response.data.items)[0].title);
+console.log('axios end');
+return ((response.data.items)[0].title);
+})
+.catch(error => {
+console.log(error);
+});
 }
+*/
 // End of Blogger API
+
+
+function initialize() {
+    // Setting URL and headers for request
+    var options = {
+        url: 'https://www.googleapis.com/blogger/v3/blogs/8300627851746571333/posts?key=AIzaSyA9qXj63WzU2Es8IrO1spSZL78OWLV4oWc'
+    };
+    // Return new promise 
+    return new Promise(function(resolve, reject) {
+    	// Do async job
+        request.get(options, function(err, resp, body) {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(JSON.parse(body));
+            }
+        })
+    })
+
+}
 
 var logger = function(req, res, next) {
 	next();
@@ -40,19 +63,38 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(bodyParser.json());
 //app.use(bodyParser.urlencoded({extended: false})); 
 
-
-
-
 // Set Static Path
 var publicDir = require('path').join(__dirname,'public');
 app.use(express.static(publicDir));
 
+// Home Page
 app.get('/', function(req, res) {
-	var p = 'ay22';
-	res.render('index2', {
+	var i; 
+	var initializePromise = initialize();
+    initializePromise.then(function(result) {
+    	var item = [];
+        for (i = 0; i < 4; i++) 
+        {
+        	item.push((result.items)[i].title);
+        	item.push((result.items)[i].url);
+        }
+
+        	res.render('index2', {
 		title: 'Home Page',
-		myPosts: p
+		postT0: item[0],
+		postU0: item[1],
+		postT1: item[2],
+		postU1: item[3],
+		postT2: item[4],
+		postU2: item[5],
+		postT3: item[6],
+		postU3: item[7],						
 	});
+    }, function(err) {
+        console.log(err);
+    })
+
+
 });
 
 // Clicking on My Simple Web App redirects you to dogwebapp
