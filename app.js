@@ -10,6 +10,7 @@ var axios = require('axios');
 var events = require('events');
 var eventEmitter = new events.EventEmitter();
 var request = require("request");
+var moment = require('moment');
 
 
 // Blogger API
@@ -29,40 +30,7 @@ console.log(error);
 */
 // End of Blogger API
 
-function createPage(theURL, theTitle, theRender) 
-{
-	// Home Page
-app.get(theURL, function(req, res) {
-
-	var i; 
-	var initializePromise = initialize();
-    initializePromise.then(function(result) {
-    	var item = [];
-        for (i = 0; i < 4; i++) 
-        {
-        	item.push((result.items)[i].title);
-        	item.push((result.items)[i].url);
-        }
-
-        	res.render(theRender, {
-		title: theTitle,
-		postT0: item[0],
-		postU0: item[1],
-		postT1: item[2],
-		postU1: item[3],
-		postT2: item[4],
-		postU2: item[5],
-		postT3: item[6],
-		postU3: item[7],						
-	});
-    }, function(err) {
-        console.log(err);
-    })
-});
-}
-
-
-function initialize() {
+function initializeBloggerAPI() {
     // Setting URL and headers for request
     var options = {
         url: 'https://www.googleapis.com/blogger/v3/blogs/8300627851746571333/posts?key=AIzaSyA9qXj63WzU2Es8IrO1spSZL78OWLV4oWc'
@@ -80,6 +48,66 @@ function initialize() {
     })
 
 }
+
+function initializeTwitterAPI()
+{
+
+}
+
+function createPage(theURL, theTitle, theRender) 
+{
+	// Home Page
+app.get(theURL, function(req, res) {
+
+	var i; 
+	var initializePromise = initializeBloggerAPI();
+    initializePromise.then(function(result) {
+    	var ts = Date.now();
+    	ts = ts.toString();
+    	ts = ts.slice(0,-3);
+
+    	var itemTitle = [];
+    	var itemURL = [];
+    	var itemTime = []; 
+        for (i = 0; i < 4; i++) 
+        {
+        	itemTitle.push((result.items)[i].title);
+        	itemURL.push((result.items)[i].url);
+        	itemTime.push((result.items)[i].published);
+        	itemTime[i] = itemTime[i].slice(0, -6); 
+
+			itemTime[i] = moment(itemTime[i]).fromNow(); 
+
+        }
+
+
+
+        	res.render(theRender, {
+		title: theTitle,
+		postT0: itemTitle[0],
+		postU0: itemURL[0],
+		postC0: itemTime[0],
+		postT1: itemTitle[1],
+		postU1: itemURL[1],
+		postC1: itemTime[1],
+		postT2: itemTitle[2],
+		postU2: itemURL[2],
+		postC2: itemTime[2],
+		postT3: itemTitle[3],
+		postU3: itemURL[3],						
+		postC3: itemTime[3]
+	});
+
+	var initializePromise2 = initializeTwitterAPI();
+
+
+    }, function(err) {
+        console.log(err);
+    })
+});
+}
+
+
 
 var logger = function(req, res, next) {
 	next();
@@ -102,135 +130,6 @@ app.use(express.static(publicDir));
 // Home Page
 createPage('/','Home Page','index2');
 
-// Clicking on My Simple Web App redirects you to dogwebapp
-
-app.get('/dogwebapp',function(req,res) {
-	res.render('index', {
-		title: 'Do you like dogs?'
-	});
-});
-
-
-app.post('/result', function(req,res) {
-	if ((req.body.Result) === 'Yes') {
-			res.render('good', {
-		title: 'Hey nice! Me too! What kind of dogs are you looking for?',
-
-	});
-	 }else {
-
-			res.render('bad', {
-		title: 'Ohno!'
-	});
-	}
-});
-	
-app.post('/choose', function(req,res) {
-	if ((req.body.Choose) === 'Fluffy') {
-		randomPuppy("fluffydogs")
-	.then(url => {
-		res.render('fluffy',{
-			title: 'Here are tons of fluffy dogs! Keep clicking for more!',
-			url: url,
-		})
-		});
-	}else if ((req.body.Choose) === 'Tiny') {
-		randomPuppy("tinydogs")
-	.then(url => {
-		console.log('onto next doggo');
-		console.log('tiny');
-		res.render('tiny', {
-			title: 'Here are tons of tiny dogs! Keep clicking for more!',
-			url: url
-		})
-		});
-	}else if ((req.body.Choose) === 'Smile') {
-		randomPuppy("puppysmiles")
-	.then(url => {
-		console.log('onto next doggo');
-		res.render('smile', {
-			title: 'Here are tons of dogs smiling! Keep clicking for more!',
-			url: url
-		})
-		});
-	}else if ((req.body.Choose) === 'Driving') {
-		randomPuppy("dogsdrivingcars")
-	.then(url => {
-		console.log('onto next doggo');
-		res.render('driving', {
-			title: 'Here are tons of dogs driving cars! Keep clicking for more!',
-			url: url
-		})
-		});
-	}else {
-	
-	}
-});
-
-
-app.get('/nextdoggo', function(req,res) {
-		randomPuppy("fluffydogs")
-	.then(url => {
-			console.log('onto next doggo');
-			res.render('doggopage', {
-		title: 'Glad you like dogs! Keep clicking for more!',
-		url: url
-	}) 
-	});
-
-});
-
-app.get('/nextfluffydoggo', function(req,res) {
-		randomPuppy("fluffydogs")
-	.then(url => {
-			console.log('onto next doggo');
-			res.render('fluffy', {
-		title: 'Here are tons of fluffy dogs! Keep clicking for more!',
-		url: url
-	}) 
-	});
-
-});
-
-app.get('/nexttinydoggo', function(req,res) {
-		randomPuppy("tinydogs")
-	.then(url => {
-			console.log('onto next doggo');
-			res.render('tiny', {
-		title: 'Here are tons of tiny dogs! Keep clicking for more!',
-		url: url
-	}) 
-	});
-
-});
-
-app.get('/nextsmiledoggo', function(req,res) {
-		randomPuppy("puppysmiles")
-	.then(url => {
-			console.log('onto next doggo');
-			res.render('smile', {
-		title: 'Here are tons of dogs smiling! Keep clicking for more!',
-		url: url
-	}) 
-	});
-
-});
-
-
-app.get('/nextdrivingdoggo', function(req,res) {
-		randomPuppy("dogsdrivingcars")
-	.then(url => {
-			console.log('onto next doggo');
-			res.render('driving', {
-		title: 'Here are tons of dogs driving cars! Keep clicking for more!',
-		url: url
-	}) 
-	});
-
-});
-
-// End of Dog Web App
-
 // About me 
 createPage('/aboutme','About Me','aboutme')
 
@@ -240,7 +139,140 @@ createPage('/contactme','Contact Me', 'contactme');
 // My resume
 createPage('/myresume','My Resume', 'resume');
 
+// Try sidebar
 createPage('/left','Home page?? hey','left-sidebar');
+
+
+	// Clicking on My Simple Web App redirects you to dogwebapp
+
+	app.get('/dogwebapp',function(req,res) {
+		res.render('index', {
+			title: 'Do you like dogs?'
+		});
+	});
+
+
+	app.post('/result', function(req,res) {
+		if ((req.body.Result) === 'Yes') {
+				res.render('good', {
+			title: 'Hey nice! Me too! What kind of dogs are you looking for?',
+
+		});
+		 }else {
+
+				res.render('bad', {
+			title: 'Ohno!'
+		});
+		}
+	});
+		
+	app.post('/choose', function(req,res) {
+		if ((req.body.Choose) === 'Fluffy') {
+			randomPuppy("fluffydogs")
+		.then(url => {
+			res.render('fluffy',{
+				title: 'Here are tons of fluffy dogs! Keep clicking for more!',
+				url: url,
+			})
+			});
+		}else if ((req.body.Choose) === 'Tiny') {
+			randomPuppy("tinydogs")
+		.then(url => {
+			console.log('onto next doggo');
+			console.log('tiny');
+			res.render('tiny', {
+				title: 'Here are tons of tiny dogs! Keep clicking for more!',
+				url: url
+			})
+			});
+		}else if ((req.body.Choose) === 'Smile') {
+			randomPuppy("puppysmiles")
+		.then(url => {
+			console.log('onto next doggo');
+			res.render('smile', {
+				title: 'Here are tons of dogs smiling! Keep clicking for more!',
+				url: url
+			})
+			});
+		}else if ((req.body.Choose) === 'Driving') {
+			randomPuppy("dogsdrivingcars")
+		.then(url => {
+			console.log('onto next doggo');
+			res.render('driving', {
+				title: 'Here are tons of dogs driving cars! Keep clicking for more!',
+				url: url
+			})
+			});
+		}else {
+		
+		}
+	});
+
+
+	app.get('/nextdoggo', function(req,res) {
+			randomPuppy("fluffydogs")
+		.then(url => {
+				console.log('onto next doggo');
+				res.render('doggopage', {
+			title: 'Glad you like dogs! Keep clicking for more!',
+			url: url
+		}) 
+		});
+
+	});
+
+	app.get('/nextfluffydoggo', function(req,res) {
+			randomPuppy("fluffydogs")
+		.then(url => {
+				console.log('onto next doggo');
+				res.render('fluffy', {
+			title: 'Here are tons of fluffy dogs! Keep clicking for more!',
+			url: url
+		}) 
+		});
+
+	});
+
+	app.get('/nexttinydoggo', function(req,res) {
+			randomPuppy("tinydogs")
+		.then(url => {
+				console.log('onto next doggo');
+				res.render('tiny', {
+			title: 'Here are tons of tiny dogs! Keep clicking for more!',
+			url: url
+		}) 
+		});
+
+	});
+
+	app.get('/nextsmiledoggo', function(req,res) {
+			randomPuppy("puppysmiles")
+		.then(url => {
+				console.log('onto next doggo');
+				res.render('smile', {
+			title: 'Here are tons of dogs smiling! Keep clicking for more!',
+			url: url
+		}) 
+		});
+
+	});
+
+
+	app.get('/nextdrivingdoggo', function(req,res) {
+			randomPuppy("dogsdrivingcars")
+		.then(url => {
+				console.log('onto next doggo');
+				res.render('driving', {
+			title: 'Here are tons of dogs driving cars! Keep clicking for more!',
+			url: url
+		}) 
+		});
+
+	});
+
+	// End of Dog Web App
+
+
 
 app.listen(8080, function() {
 	console.log("Server started...");
