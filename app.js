@@ -29,6 +29,38 @@ console.log(error);
 */
 // End of Blogger API
 
+function createPage(theURL, theTitle, theRender) 
+{
+	// Home Page
+app.get(theURL, function(req, res) {
+
+	var i; 
+	var initializePromise = initialize();
+    initializePromise.then(function(result) {
+    	var item = [];
+        for (i = 0; i < 4; i++) 
+        {
+        	item.push((result.items)[i].title);
+        	item.push((result.items)[i].url);
+        }
+
+        	res.render(theRender, {
+		title: theTitle,
+		postT0: item[0],
+		postU0: item[1],
+		postT1: item[2],
+		postU1: item[3],
+		postT2: item[4],
+		postU2: item[5],
+		postT3: item[6],
+		postU3: item[7],						
+	});
+    }, function(err) {
+        console.log(err);
+    })
+});
+}
+
 
 function initialize() {
     // Setting URL and headers for request
@@ -61,41 +93,14 @@ app.set('views', path.join(__dirname, 'views'));
 
 // Body Parser Middleware
 app.use(bodyParser.json());
-//app.use(bodyParser.urlencoded({extended: false})); 
+app.use(bodyParser.urlencoded({extended: false})); 
 
 // Set Static Path
 var publicDir = require('path').join(__dirname,'public');
 app.use(express.static(publicDir));
 
 // Home Page
-app.get('/', function(req, res) {
-	var i; 
-	var initializePromise = initialize();
-    initializePromise.then(function(result) {
-    	var item = [];
-        for (i = 0; i < 4; i++) 
-        {
-        	item.push((result.items)[i].title);
-        	item.push((result.items)[i].url);
-        }
-
-        	res.render('index2', {
-		title: 'Home Page',
-		postT0: item[0],
-		postU0: item[1],
-		postT1: item[2],
-		postU1: item[3],
-		postT2: item[4],
-		postU2: item[5],
-		postT3: item[6],
-		postU3: item[7],						
-	});
-    }, function(err) {
-        console.log(err);
-    })
-
-
-});
+createPage('/','Home Page','index2');
 
 // Clicking on My Simple Web App redirects you to dogwebapp
 
@@ -105,38 +110,15 @@ app.get('/dogwebapp',function(req,res) {
 	});
 });
 
-app.get('/aboutme',function(req,res) {
-	res.render('aboutme', {
-		title: 'About Me'
-	});
-});
-
-app.get('/contactme',function(req,res) {
-	res.render('contactme', {
-		title: 'Contact Me'
-	});
-});
-
-app.get('/myresume',function(req,res) {
-	res.render('resume', {
-		title: 'My Resume'
-	});
-});
-
-app.get('/left',function(req,res) {
-	res.render('left-sidebar', {
-		title: 'Home Page'
-	});
-});
 
 app.post('/result', function(req,res) {
-
 	if ((req.body.Result) === 'Yes') {
 			res.render('good', {
 		title: 'Hey nice! Me too! What kind of dogs are you looking for?',
 
 	});
 	 }else {
+
 			res.render('bad', {
 		title: 'Ohno!'
 	});
@@ -247,8 +229,18 @@ app.get('/nextdrivingdoggo', function(req,res) {
 
 });
 
+// End of Dog Web App
 
+// About me 
+createPage('/aboutme','About Me','aboutme')
 
+// Contact me
+createPage('/contactme','Contact Me', 'contactme');
+
+// My resume
+createPage('/myresume','My Resume', 'resume');
+
+createPage('/left','Home page?? hey','left-sidebar');
 
 app.listen(8080, function() {
 	console.log("Server started...");
