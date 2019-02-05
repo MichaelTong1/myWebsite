@@ -11,7 +11,14 @@ var events = require('events');
 var eventEmitter = new events.EventEmitter();
 var request = require("request");
 var moment = require('moment');
+var Twitter = require('twitter');
+var getBearerToken = require('get-twitter-bearer-token')
+var twitter_consumer_key = 'iYVPy2jjFhAHXjFerCw2CpoRA'
+var twitter_consumer_secret = 'trD8PRzCGbeoguoT6CurrRScEWJG2wRUZkfNtGhJUInngCt1NC'
+var twitter_token = 'AAAAAAAAAAAAAAAAAAAAAGdy9QAAAAAApJFUD%2FsF5Fm8kfurv79Ermqapls%3DYi9Z3uYtRYKpGMOZfm3OwpwtVPnDiJIIOYva3M7rb4MIK5Yx9Y'
 
+var instagram_token = '23481001.4ded600.ee240e0288434f77b9a382a230f899ae'
+var Instafeed = require("instafeed.js");
 
 // Blogger API
 /*
@@ -49,8 +56,37 @@ function initializeBloggerAPI() {
 
 }
 
+
+
 function initializeTwitterAPI()
 {
+
+
+	var client = new Twitter({
+  consumer_key: twitter_consumer_key,
+  consumer_secret: twitter_consumer_secret,
+  bearer_token: twitter_token
+});
+
+var params = {screen_name: 'Michael_Tong1',
+			  count: '4'
+			};
+
+
+client.get('statuses/user_timeline', params, function(error, tweets, response) {
+  if (!error) {
+  	var tweetText = [];
+            for (i = 0; i < 4; i++) 
+        {
+        	tweetText.push(response[i]);
+        }
+        console.log(tweetText);
+  }
+  else {
+  	console.log(error);
+  }
+});
+
 
 }
 
@@ -80,25 +116,27 @@ app.get(theURL, function(req, res) {
 
         }
 
+        // try insta api
 
+// use standard resolution: url as pic
+// use link as url 
+// https://api.instagram.com/v1/users/self/media/recent?access_token=23481001.4ded600.ee240e0288434f77b9a382a230f899ae
+// will get the information
+
+        // end insta api
+
+
+        	// T - Title
+        	// U - URL
+        	// C - Time 
 
         	res.render(theRender, {
 		title: theTitle,
-		postT0: itemTitle[0],
-		postU0: itemURL[0],
-		postC0: itemTime[0],
-		postT1: itemTitle[1],
-		postU1: itemURL[1],
-		postC1: itemTime[1],
-		postT2: itemTitle[2],
-		postU2: itemURL[2],
-		postC2: itemTime[2],
-		postT3: itemTitle[3],
-		postU3: itemURL[3],						
-		postC3: itemTime[3]
+		postT0: itemTitle[0],postU0: itemURL[0],postC0: itemTime[0],postT1: itemTitle[1],postU1: itemURL[1],postC1: itemTime[1],
+		postT2: itemTitle[2],postU2: itemURL[2],postC2: itemTime[2],postT3: itemTitle[3],postU3: itemURL[3],postC3: itemTime[3]
 	});
 
-	var initializePromise2 = initializeTwitterAPI();
+	initializeTwitterAPI();
 
 
     }, function(err) {
