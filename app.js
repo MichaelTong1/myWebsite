@@ -21,6 +21,39 @@ var instagram_token = '23481001.4ded600.ee240e0288434f77b9a382a230f899ae'
 var Instafeed = require("instafeed.js");
 
 var http = require('http');
+var https = require('https');
+var fs = require('fs');
+
+// Start HTTPS try
+
+
+const privateKey = fs.readFileSync(__dirname + '/public/encryption/privatekey.pem', 'utf8');
+const certificate = fs.readFileSync(__dirname + '/public/encryption/certificate.pem', 'utf8');
+
+const credentials = {
+	key: privateKey,
+	cert: certificate,
+};
+
+
+
+const httpServer = http.createServer(app);
+const httpsServer = https.createServer(credentials, app);
+
+httpServer.listen(80, () => {
+	console.log('HTTP Server running on port 80');
+});
+
+httpsServer.listen(443, () => {
+	console.log('HTTPS Server running on port 443');
+});
+
+
+
+// end HTTP try
+
+
+
 
 // Blogger API
 /*
