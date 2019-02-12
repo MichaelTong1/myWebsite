@@ -19,22 +19,10 @@ var twitter_token = 'AAAAAAAAAAAAAAAAAAAAAGdy9QAAAAAApJFUD%2FsF5Fm8kfurv79Ermqap
 
 var instagram_token = '23481001.4ded600.ee240e0288434f77b9a382a230f899ae'
 var Instafeed = require("instafeed.js");
+
 var fs = require('fs');
-var forceSsl = require('express-force-ssl');
-app.use(forceSsl);
-var key = fs.readFileSync(__dirname + '/public/encryption/private.key', 'utf8');
-var cert = fs.readFileSync(__dirname + '/public/encryption/server.crt', 'utf8');
-
-var options = {
-  key: key,
-  cert: cert
-};
-
+var http = require('http');
 var https = require('https');
-https.createServer(options, app).listen(443);
-
-
-
 
 
 // Blogger API
@@ -327,7 +315,15 @@ createPage('/left','Home page?? hey','left-sidebar');
 
 	// End of Dog Web App
 
+var httpServer = http.createServer(app);
 
 
+httpServer.listen(8080);
+
+/*
+app.listen(8080, function() {
+	console.log("Server started...");
+})
+*/
 
 
