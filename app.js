@@ -27,6 +27,9 @@ var fs = require('fs');
 // Start HTTPS try
 
 
+app.listen(8080, '172.31.21.148');
+
+
 const privateKey = fs.readFileSync(__dirname + '/public/encryption/privatekey.pem', 'utf8');
 const certificate = fs.readFileSync(__dirname + '/public/encryption/certificate.pem', 'utf8');
 
@@ -34,7 +37,7 @@ const credentials = {
 	key: privateKey,
 	cert: certificate,
 };
-
+/*
 
 
 const httpServer = http.createServer(app);
@@ -48,7 +51,7 @@ httpsServer.listen(443, () => {
 	console.log('HTTPS Server running on port 443');
 });
 
-
+*/
 
 // end HTTP try
 
@@ -346,10 +349,6 @@ createPage('/left','Home page?? hey','left-sidebar');
 	// End of Dog Web App
 
 
-
-app.listen(8080, function() {
-	console.log("Server started...");
-})
 
 
 
