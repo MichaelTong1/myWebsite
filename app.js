@@ -27,7 +27,7 @@ var fs = require('fs');
 // Start HTTPS try
 
 
-app.listen(8080, '172.31.21.148');
+app.listen(8181, 'localhost');
 
 
 const privateKey = fs.readFileSync(__dirname + '/public/encryption/privatekey.pem', 'utf8');
