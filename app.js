@@ -98,7 +98,7 @@ function initializeBloggerAPI() {
 
 function initializeTwitterAPI()
 {
-
+    return new Promise(function(resolve, reject) {
 
 	var client = new Twitter({
   consumer_key: twitter_consumer_key,
@@ -114,19 +114,31 @@ var params = {screen_name: 'Michael_Tong1',
 client.get('statuses/user_timeline', params, function(error, tweets, response) {
   if (!error) {
   	var tweetText = [];
+  	// Ex: https://twitter.com/Michael_Tong1/status/1095885600484483079
+  	var tweetID = [];
+  	var tweetTime = [];
+  	var returnArray = [];
             for (i = 0; i < 4; i++) 
         {
-        	tweetText.push(response[i]);
+        	tweetText.push(tweets[i].text);
+        	tweetID.push(tweets[i].id_str);
+        	tweetTime.push(tweets[i].created_at);
         }
-        console.log(tweetText);
+
+        returnArray = tweetText.concat(tweetID);
+        returnArray = returnArray.concat(tweetTime); 
+
+
+        resolve(returnArray); 
+
   }
   else {
-  	console.log(error);
+  	reject(err);
   }
-});
-
+});})
 
 }
+
 
 function createPage(theURL, theTitle, theRender) 
 {
@@ -149,10 +161,38 @@ app.get(theURL, function(req, res) {
         	itemURL.push((result.items)[i].url);
         	itemTime.push((result.items)[i].published);
         	itemTime[i] = itemTime[i].slice(0, -6); 
-
 			itemTime[i] = moment(itemTime[i]).fromNow(); 
-
         }
+
+        // Twitter API
+        // 0 - 3 text
+        // 4 - 7 id_str
+        // 8 - 11 timestamp
+
+        // fix timestamp
+        var timestamp = new Date().getTime();
+        timestamp = timestamp - 7200000;
+
+	var twitterResponse = initializeTwitterAPI();
+	twitterResponse.then(function(twitterResult) {
+		var TR = [];
+		TR = twitterResult;
+        for (i = 4; i < 8; i++) 
+        {
+		TR[i] = 'https://twitter.com/Michael_Tong1/status/' + TR[i]
+        }
+        for (i = 8; i < 12; i++) 
+        {
+        //console.log(TR[i]);	
+        TR[i] = moment(new Date(TR[i]).getTime());
+        TR[i] = moment(TR[i]).from(timestamp);
+        //console.log(TR[i].toString());
+        }
+
+        // Twitter API end
+
+
+
 
         // try insta api
 
@@ -171,11 +211,15 @@ app.get(theURL, function(req, res) {
         	res.render(theRender, {
 		title: theTitle,
 		postT0: itemTitle[0],postU0: itemURL[0],postC0: itemTime[0],postT1: itemTitle[1],postU1: itemURL[1],postC1: itemTime[1],
-		postT2: itemTitle[2],postU2: itemURL[2],postC2: itemTime[2],postT3: itemTitle[3],postU3: itemURL[3],postC3: itemTime[3]
+		postT2: itemTitle[2],postU2: itemURL[2],postC2: itemTime[2],postT3: itemTitle[3],postU3: itemURL[3],postC3: itemTime[3],
+		tweetT0: TR[0], tweetT1: TR[1], tweetT2: TR[2], tweetT3: TR[3], tweetU0: TR[4], tweetU1: TR[5], tweetU2: TR[6], 
+		tweetU3: TR[7], tweetC0: TR[8], tweetC1: TR[9], tweetC2: TR[10], tweetC3: TR[11]
 	});
 
-	initializeTwitterAPI();
 
+	}, function(err) {
+        console.log(err);
+    })
 
     }, function(err) {
         console.log(err);
