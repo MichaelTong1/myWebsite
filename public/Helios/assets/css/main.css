@@ -2394,7 +2394,6 @@ input, select, textarea {
 
 	#banner {
 		background: #fff;
-		text-align: center;
 		padding: 4.5em 0 4.5em 0;
 		margin-bottom: 0;
 	}
@@ -2402,6 +2401,10 @@ input, select, textarea {
 		#banner header > p {
 			margin-bottom: 0;
 		}
+
+	#small {
+		padding-left: 25%;
+	}
 
 /* Content */
 
@@ -2664,8 +2667,8 @@ input, select, textarea {
 		/* Banner */
 
 			#banner {
-				padding-left: 2em;
-				padding-right: 2em;
+				padding-left: 5em;
+				padding-right: 5em;
 			}
 
 		/* Footer */
