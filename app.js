@@ -75,6 +75,26 @@ console.log(error);
 */
 // End of Blogger API
 
+
+function initializeInstagramAPI() {
+    // Setting URL and headers for request
+    var options = {
+        url: 'https://api.instagram.com/v1/users/self/media/recent?access_token=23481001.4ded600.ee240e0288434f77b9a382a230f899ae'
+    };
+    // Return new promise 
+    return new Promise(function(resolve, reject) {
+    	// Do async job
+        request.get(options, function(err, resp, body) {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(JSON.parse(body));
+            }
+        })
+    })
+
+}
+
 function initializeBloggerAPI() {
     // Setting URL and headers for request
     var options = {
@@ -144,8 +164,25 @@ function createPage(theURL, theTitle, theRender)
 {
 	// Home Page
 app.get(theURL, function(req, res) {
-
 	var i; 
+// Instagram API
+
+	var InstaResponse = initializeInstagramAPI();
+	InstaResponse.then(function(InstaResult) {
+
+		var IR = []
+
+		for (i = 0; i < 6; i++)
+	{
+		IR.push(InstaResult.data[i].images.standard_resolution.url);
+		IR.push(InstaResult.data[i].link);
+	}
+
+
+
+// Instagram API End
+// Blogger API Start
+
 	var initializePromise = initializeBloggerAPI();
     initializePromise.then(function(result) {
     	var ts = Date.now();
@@ -164,7 +201,9 @@ app.get(theURL, function(req, res) {
 			itemTime[i] = moment(itemTime[i]).fromNow(); 
         }
 
-        // Twitter API
+// Blogger API End
+
+// Twitter API start
         // 0 - 3 text
         // 4 - 7 id_str
         // 8 - 11 timestamp
@@ -189,31 +228,22 @@ app.get(theURL, function(req, res) {
         //console.log(TR[i].toString());
         }
 
-        // Twitter API end
-
-
-
-
-        // try insta api
-
-// use standard resolution: url as pic
-// use link as url 
-// https://api.instagram.com/v1/users/self/media/recent?access_token=23481001.4ded600.ee240e0288434f77b9a382a230f899ae
-// will get the information
-
-        // end insta api
+// Twitter API end
 
 
         	// T - Title
         	// U - URL
         	// C - Time 
+        	// P - Picture
 
         	res.render(theRender, {
 		title: theTitle,
 		postT0: itemTitle[0],postU0: itemURL[0],postC0: itemTime[0],postT1: itemTitle[1],postU1: itemURL[1],postC1: itemTime[1],
 		postT2: itemTitle[2],postU2: itemURL[2],postC2: itemTime[2],postT3: itemTitle[3],postU3: itemURL[3],postC3: itemTime[3],
 		tweetT0: TR[0], tweetT1: TR[1], tweetT2: TR[2], tweetT3: TR[3], tweetU0: TR[4], tweetU1: TR[5], tweetU2: TR[6], 
-		tweetU3: TR[7], tweetC0: TR[8], tweetC1: TR[9], tweetC2: TR[10], tweetC3: TR[11]
+		tweetU3: TR[7], tweetC0: TR[8], tweetC1: TR[9], tweetC2: TR[10], tweetC3: TR[11],
+		instaP0: IR[0], instaU0: IR[1], instaP1: IR[2], instaU1: IR[3], instaP2: IR[4], instaU2: IR[5], instaP3: IR[6], 
+		instaU3: IR[7], instaP4: IR[8], instaU4: IR[9], instaP5: IR[10], instaU5: IR[11],
 	});
 
 
@@ -222,6 +252,9 @@ app.get(theURL, function(req, res) {
     })
 
     }, function(err) {
+        console.log(err);
+    })
+        }, function(err) {
         console.log(err);
     })
 });

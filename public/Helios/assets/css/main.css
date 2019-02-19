@@ -1815,6 +1815,17 @@ input, select, textarea {
 				margin: 0 auto;
 				width: auto;
 			}
+		.image.insta img:hover {
+			opacity: 0.5;
+			filter: alpha(opacity=50);
+		}
+			.image.insta {
+	    	width: 170px;
+   			height: 140px;
+    		background-position: center center;
+  			background-repeat: no-repeat;
+  			overflow: hidden;
+			}
 
 /* List */
 
