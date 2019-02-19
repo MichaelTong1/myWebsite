@@ -185,7 +185,7 @@ app.get(theURL, function(req, res) {
         {
         //console.log(TR[i]);	
         TR[i] = moment(new Date(TR[i]).getTime());
-        TR[i] = moment(TR[i]).from(timestamp);
+        TR[i] = moment(TR[i]).fromNow();
         //console.log(TR[i].toString());
         }
 
