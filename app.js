@@ -185,7 +185,8 @@ app.get(theURL, function(req, res) {
 
         // fix timestamp
         var timestamp = new Date().getTime();
-        timestamp = timestamp - 18000000;
+        timestamp = timestamp - 14400000;
+        // 1440
 
 	var initializePromise = initializeBloggerAPI();
     initializePromise.then(function(result) {
