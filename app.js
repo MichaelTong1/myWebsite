@@ -185,8 +185,8 @@ app.get(theURL, function(req, res) {
 
         // fix timestamp
         var timestamp = new Date().getTime();
-        timestamp = timestamp - 14400000;
-        // 1440
+        timestamp = timestamp + 3600000;
+        // 3600
 
 	var initializePromise = initializeBloggerAPI();
     initializePromise.then(function(result) {
@@ -203,7 +203,7 @@ app.get(theURL, function(req, res) {
         	itemURL.push((result.items)[i].url);
         	itemTime.push((result.items)[i].published);
         	itemTime[i] = itemTime[i].slice(0, -6); 
-			itemTime[i] = moment(itemTime[i]).from(timestamp); 
+			itemTime[i] = moment(itemTime[i]).fromNow(); 
         }
 
 // Blogger API End
