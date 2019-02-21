@@ -183,6 +183,10 @@ app.get(theURL, function(req, res) {
 // Instagram API End
 // Blogger API Start
 
+        // fix timestamp
+        var timestamp = new Date().getTime();
+        timestamp = timestamp - 18000000;
+
 	var initializePromise = initializeBloggerAPI();
     initializePromise.then(function(result) {
     	var ts = Date.now();
@@ -198,7 +202,7 @@ app.get(theURL, function(req, res) {
         	itemURL.push((result.items)[i].url);
         	itemTime.push((result.items)[i].published);
         	itemTime[i] = itemTime[i].slice(0, -6); 
-			itemTime[i] = moment(itemTime[i]).fromNow(); 
+			itemTime[i] = moment(itemTime[i]).from(timestamp); 
         }
 
 // Blogger API End
@@ -208,9 +212,7 @@ app.get(theURL, function(req, res) {
         // 4 - 7 id_str
         // 8 - 11 timestamp
 
-        // fix timestamp
-        var timestamp = new Date().getTime();
-        timestamp = timestamp - 7200000;
+
 
 	var twitterResponse = initializeTwitterAPI();
 	twitterResponse.then(function(twitterResult) {
