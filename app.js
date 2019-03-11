@@ -298,6 +298,13 @@ createPage('/myresume','My Resume', 'resume');
 // Try sidebar
 createPage('/left','Home page?? hey','left-sidebar');
 
+// Food look-up web app
+
+	app.get('/foodwebapp',function(req,res) {
+		res.render('food', {
+			title: 'Your eyes eat first.'
+		});
+	});
 
 	// Clicking on My Simple Web App redirects you to dogwebapp
 
