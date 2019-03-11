@@ -11,6 +11,10 @@ var events = require('events');
 var eventEmitter = new events.EventEmitter();
 var request = require("request");
 var moment = require('moment');
+
+var where = require('node-where');
+var cities = require("all-the-cities");
+
 var Twitter = require('twitter');
 var getBearerToken = require('get-twitter-bearer-token')
 var twitter_consumer_key = 'iYVPy2jjFhAHXjFerCw2CpoRA'
@@ -82,10 +86,11 @@ console.log(error);
 
 // yelp api start
 
-function initializeYelpAPI() {
+function initializeYelpAPI(Lat, Lng) {
     // Setting URL and headers for request
+    var inputURL = 'https://api.yelp.com/v3/businesses/search?&term=food&latitude=' + Lat + '&longitude=' + Lng;
     var options = {
-        url: 'https://api.yelp.com/v3/businesses/search?&term=food&latitude=32.948334&longitude=-96.729851',
+        url: inputURL,
         headers:{
         	Authorization: ' Bearer hiLPiqnAA1IT8VA6LIckjdhWxICk7A1dyUcVSbMEVpT3tLP9pgRuRpTf4T0FwZCJdhSiyLPggTSn3pvH4CoLnJFJCvdd3dJh37e61LQ0y4TmQVeou-OO_-J_5KOFXHYx'
         }
@@ -335,12 +340,21 @@ createPage('/left','Home page?? hey','left-sidebar');
 function createWebAppPage(theURL, theTitle, theRender) 
 {
 	// Web App
-app.get(theURL, function(req, res) {
+app.post(theURL, function(req, res) {
 	var i; 
-	var YR = []; // Yelp Results
-	var j = 0;
+	var YR = []; // Yelp Result
+	var lat;
+	var lon;
 
-	var YelpResponse = initializeYelpAPI();
+	var textfield = req.body.textfield;
+
+cities.filter(city => {
+  console.log(city.name.match('Albuquerque')[0])
+})
+
+
+
+	var YelpResponse = initializeYelpAPI(lat, lon);
 	YelpResponse.then(function(YelpResult) {
 
 		for (i = 0; i < 20; i++)
@@ -369,7 +383,19 @@ app.get(theURL, function(req, res) {
 }
 
 // Food look-up web app
-createWebAppPage('/foodwebapp','Your eyes eat first.','food');
+//createWebAppPage('/foodwebapp','Your eyes eat first.','food');
+
+createWebAppPage('/foodresult','Your eyes eat first.', 'food');
+
+
+	app.get('/foodwebapp',function(req,res) {
+		res.render('foodstart', {
+			title: 'Your eyes eat first.',
+			titleBar: 'Reverse Restaurant Look-Up'
+		});
+	});
+
+
 
 	// Clicking on My Simple Web App redirects you to dogwebapp
 	app.get('/dogwebapp',function(req,res) {
