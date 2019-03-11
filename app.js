@@ -20,6 +20,11 @@ var twitter_token = 'AAAAAAAAAAAAAAAAAAAAAGdy9QAAAAAApJFUD%2FsF5Fm8kfurv79Ermqap
 var instagram_token = '23481001.4ded600.ee240e0288434f77b9a382a230f899ae'
 var Instafeed = require("instafeed.js");
 
+var yelp = require('yelp-fusion');
+
+var yelp_ID = 'acGp9teuKjd9a9osC74G1Q'
+var yelp_key = 'hiLPiqnAA1IT8VA6LIckjdhWxICk7A1dyUcVSbMEVpT3tLP9pgRuRpTf4T0FwZCJdhSiyLPggTSn3pvH4CoLnJFJCvdd3dJh37e61LQ0y4TmQVeou-OO_-J_5KOFXHYx'
+
 var http = require('http');
 var https = require('https');
 var fs = require('fs');
@@ -75,6 +80,31 @@ console.log(error);
 */
 // End of Blogger API
 
+// yelp api start
+
+function initializeYelpAPI() {
+    // Setting URL and headers for request
+    var options = {
+        url: 'https://api.yelp.com/v3/businesses/search?&term=food&latitude=32.948334&longitude=-96.729851',
+        headers:{
+        	Authorization: ' Bearer hiLPiqnAA1IT8VA6LIckjdhWxICk7A1dyUcVSbMEVpT3tLP9pgRuRpTf4T0FwZCJdhSiyLPggTSn3pvH4CoLnJFJCvdd3dJh37e61LQ0y4TmQVeou-OO_-J_5KOFXHYx'
+        }
+    };
+    // Return new promise 
+    return new Promise(function(resolve, reject) {
+    	// Do async job
+        request.get(options, function(err, resp, body) {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(JSON.parse(body));
+            }
+        })
+    })
+
+}
+
+// yelp api end
 
 function initializeInstagramAPI() {
     // Setting URL and headers for request
@@ -180,6 +210,7 @@ app.get(theURL, function(req, res) {
 
 
 
+
 // Instagram API End
 // Blogger API Start
 
@@ -230,6 +261,7 @@ app.get(theURL, function(req, res) {
         TR[i] = moment(TR[i]).fromNow();
         //console.log(TR[i].toString());
         }
+
 
 // Twitter API end
 
@@ -298,19 +330,52 @@ createPage('/myresume','My Resume', 'resume');
 // Try sidebar
 createPage('/left','Home page?? hey','left-sidebar');
 
-// Food look-up web app
 
-	app.get('/foodwebapp',function(req,res) {
-		res.render('food', {
-			title: 'Your eyes eat first.'
-		});
+
+function createWebAppPage(theURL, theTitle, theRender) 
+{
+	// Web App
+app.get(theURL, function(req, res) {
+	var i; 
+	var YR = []; // Yelp Results
+	var j = 0;
+
+	var YelpResponse = initializeYelpAPI();
+	YelpResponse.then(function(YelpResult) {
+
+		for (i = 0; i < 20; i++)
+		{
+		YR.push(YelpResult.businesses[i].url);
+		YR.push(YelpResult.businesses[i].image_url);
+		}
+        	res.render(theRender, {
+		
+		title: theTitle, titleBar: 'Reverse Restaurant Look-Up',
+		yelpU0: YR[0],yelpP0: YR[1],yelpU1: YR[2],yelpP1: YR[3],yelpU2: YR[4],yelpP2: YR[5],
+		yelpU3: YR[6],yelpP3: YR[7],yelpU4: YR[8], yelpP4: YR[9], yelpU5: YR[10], yelpP5: YR[11],
+		yelpU6: YR[12],yelpP6: YR[13],yelpU7: YR[14],yelpP7: YR[15],yelpU8: YR[16],yelpP8: YR[17],
+		yelpU9: YR[18],yelpP9: YR[19],yelpU10: YR[20], yelpP10: YR[21], yelpU11: YR[22], yelpP11: YR[23],
+		yelpU12: YR[24],yelpP12: YR[25],yelpU13: YR[26],yelpP13: YR[27],yelpU14: YR[28],yelpP14: YR[29],
+		yelpU15: YR[30],yelpP15: YR[31],yelpU16: YR[32], yelpP16: YR[33], yelpU17: YR[34], yelpP17: YR[35],
+		yelpU18: YR[36],yelpP18: YR[37],yelpU19: YR[38], yelpP19: YR[39],
 	});
 
-	// Clicking on My Simple Web App redirects you to dogwebapp
 
+	}, function(err) {
+        console.log(err);
+    })
+
+});
+}
+
+// Food look-up web app
+createWebAppPage('/foodwebapp','Your eyes eat first.','food');
+
+	// Clicking on My Simple Web App redirects you to dogwebapp
 	app.get('/dogwebapp',function(req,res) {
 		res.render('index', {
-			title: 'Do you like dogs?'
+			title: 'Do you like dogs?',
+			titleBar: 'Random Dog Generator'
 		});
 	});
 
@@ -319,12 +384,14 @@ createPage('/left','Home page?? hey','left-sidebar');
 		if ((req.body.Result) === 'Yes') {
 				res.render('good', {
 			title: 'Hey nice! Me too! What kind of dogs are you looking for?',
+			titleBar: 'Random Dog Generator'
 
 		});
 		 }else {
 
 				res.render('bad', {
-			title: 'Ohno!'
+			title: 'Ohno!',
+			titleBar: 'Random Dog Generator'
 		});
 		}
 	});
@@ -335,6 +402,7 @@ createPage('/left','Home page?? hey','left-sidebar');
 		.then(url => {
 			res.render('fluffy',{
 				title: 'Here are tons of fluffy dogs! Keep clicking for more!',
+				titleBar: 'Random Dog Generator',
 				url: url,
 			})
 			});
@@ -345,7 +413,8 @@ createPage('/left','Home page?? hey','left-sidebar');
 			console.log('tiny');
 			res.render('tiny', {
 				title: 'Here are tons of tiny dogs! Keep clicking for more!',
-				url: url
+				url: url,
+				titleBar: 'Random Dog Generator'
 			})
 			});
 		}else if ((req.body.Choose) === 'Smile') {
@@ -354,7 +423,8 @@ createPage('/left','Home page?? hey','left-sidebar');
 			console.log('onto next doggo');
 			res.render('smile', {
 				title: 'Here are tons of dogs smiling! Keep clicking for more!',
-				url: url
+				url: url,
+				titleBar: 'Random Dog Generator'
 			})
 			});
 		}else if ((req.body.Choose) === 'Driving') {
@@ -363,7 +433,8 @@ createPage('/left','Home page?? hey','left-sidebar');
 			console.log('onto next doggo');
 			res.render('driving', {
 				title: 'Here are tons of dogs driving cars! Keep clicking for more!',
-				url: url
+				url: url,
+				titleBar: 'Random Dog Generator'
 			})
 			});
 		}else {
@@ -378,7 +449,8 @@ createPage('/left','Home page?? hey','left-sidebar');
 				console.log('onto next doggo');
 				res.render('doggopage', {
 			title: 'Glad you like dogs! Keep clicking for more!',
-			url: url
+			url: url,
+			titleBar: 'Random Dog Generator'
 		}) 
 		});
 
@@ -390,7 +462,8 @@ createPage('/left','Home page?? hey','left-sidebar');
 				console.log('onto next doggo');
 				res.render('fluffy', {
 			title: 'Here are tons of fluffy dogs! Keep clicking for more!',
-			url: url
+			url: url,
+			titleBar: 'Random Dog Generator'
 		}) 
 		});
 
@@ -402,7 +475,8 @@ createPage('/left','Home page?? hey','left-sidebar');
 				console.log('onto next doggo');
 				res.render('tiny', {
 			title: 'Here are tons of tiny dogs! Keep clicking for more!',
-			url: url
+			url: url,
+			titleBar: 'Random Dog Generator'
 		}) 
 		});
 
@@ -414,7 +488,8 @@ createPage('/left','Home page?? hey','left-sidebar');
 				console.log('onto next doggo');
 				res.render('smile', {
 			title: 'Here are tons of dogs smiling! Keep clicking for more!',
-			url: url
+			url: url,
+			titleBar: 'Random Dog Generator'
 		}) 
 		});
 
@@ -427,7 +502,8 @@ createPage('/left','Home page?? hey','left-sidebar');
 				console.log('onto next doggo');
 				res.render('driving', {
 			title: 'Here are tons of dogs driving cars! Keep clicking for more!',
-			url: url
+			url: url,
+			titleBar: 'Random Dog Generator'
 		}) 
 		});
 

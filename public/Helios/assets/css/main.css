@@ -1832,7 +1832,17 @@ input, select, textarea {
   			background-repeat: no-repeat;
   			overflow: hidden;
 			}
-
+		.image.yelp img:hover {
+			opacity: 0.5;
+			filter: alpha(opacity=50);
+		}
+			.image.yelp {
+	    	width: 170px;
+   			height: 140px;
+    		background-position: center center;
+  			background-repeat: no-repeat;
+  			overflow: hidden;
+			}
 /* List */
 
 	ul {
