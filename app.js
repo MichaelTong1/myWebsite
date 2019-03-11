@@ -357,7 +357,7 @@ app.post(theURL, function(req, res) {
 
         	res.render(theRender, {
 		
-		title: theTitle, titleBar: 'Reverse Restaurant Look-Up',
+		title: theTitle, titleBar: 'Reverse Restaurant Look-Up', titlePic: 'pizza',
 		yelpU0: YR[0],yelpP0: YR[1],yelpU1: YR[2],yelpP1: YR[3],yelpU2: YR[4],yelpP2: YR[5],
 		yelpU3: YR[6],yelpP3: YR[7],yelpU4: YR[8], yelpP4: YR[9], yelpU5: YR[10], yelpP5: YR[11],
 		yelpU6: YR[12],yelpP6: YR[13],yelpU7: YR[14],yelpP7: YR[15],yelpU8: YR[16],yelpP8: YR[17],
@@ -384,7 +384,8 @@ createWebAppPage('/foodresult','Pick the food, get the restaurant.', 'food');
 	app.get('/foodwebapp',function(req,res) {
 		res.render('foodstart', {
 			title: 'Pick a location',
-			titleBar: 'Reverse Restaurant Look-Up'
+			titleBar: 'Reverse Restaurant Look-Up',
+			titlePic: 'pizza'
 		});
 	});
 
@@ -394,7 +395,8 @@ createWebAppPage('/foodresult','Pick the food, get the restaurant.', 'food');
 	app.get('/dogwebapp',function(req,res) {
 		res.render('index', {
 			title: 'Do you like dogs?',
-			titleBar: 'Random Dog Generator'
+			titleBar: 'Random Dog Generator',
+			titlePic: 'doggo'
 		});
 	});
 
@@ -403,14 +405,16 @@ createWebAppPage('/foodresult','Pick the food, get the restaurant.', 'food');
 		if ((req.body.Result) === 'Yes') {
 				res.render('good', {
 			title: 'Hey nice! Me too! What kind of dogs are you looking for?',
-			titleBar: 'Random Dog Generator'
+			titleBar: 'Random Dog Generator',
+			titlePic: 'doggo'
 
 		});
 		 }else {
 
 				res.render('bad', {
 			title: 'Ohno!',
-			titleBar: 'Random Dog Generator'
+			titleBar: 'Random Dog Generator',
+			titlePic: 'doggo'
 		});
 		}
 	});
@@ -422,6 +426,7 @@ createWebAppPage('/foodresult','Pick the food, get the restaurant.', 'food');
 			res.render('fluffy',{
 				title: 'Here are tons of fluffy dogs! Keep clicking for more!',
 				titleBar: 'Random Dog Generator',
+				titlePic: 'doggo',
 				url: url,
 			})
 			});
@@ -433,7 +438,8 @@ createWebAppPage('/foodresult','Pick the food, get the restaurant.', 'food');
 			res.render('tiny', {
 				title: 'Here are tons of tiny dogs! Keep clicking for more!',
 				url: url,
-				titleBar: 'Random Dog Generator'
+				titleBar: 'Random Dog Generator',
+				titlePic: 'doggo'
 			})
 			});
 		}else if ((req.body.Choose) === 'Smile') {
@@ -443,7 +449,8 @@ createWebAppPage('/foodresult','Pick the food, get the restaurant.', 'food');
 			res.render('smile', {
 				title: 'Here are tons of dogs smiling! Keep clicking for more!',
 				url: url,
-				titleBar: 'Random Dog Generator'
+				titleBar: 'Random Dog Generator',
+				titlePic: 'doggo'
 			})
 			});
 		}else if ((req.body.Choose) === 'Driving') {
@@ -453,7 +460,8 @@ createWebAppPage('/foodresult','Pick the food, get the restaurant.', 'food');
 			res.render('driving', {
 				title: 'Here are tons of dogs driving cars! Keep clicking for more!',
 				url: url,
-				titleBar: 'Random Dog Generator'
+				titleBar: 'Random Dog Generator',
+				titlePic: 'doggo'
 			})
 			});
 		}else {
@@ -469,7 +477,8 @@ createWebAppPage('/foodresult','Pick the food, get the restaurant.', 'food');
 				res.render('doggopage', {
 			title: 'Glad you like dogs! Keep clicking for more!',
 			url: url,
-			titleBar: 'Random Dog Generator'
+			titleBar: 'Random Dog Generator',
+			titlePic: 'doggo'
 		}) 
 		});
 
@@ -482,7 +491,8 @@ createWebAppPage('/foodresult','Pick the food, get the restaurant.', 'food');
 				res.render('fluffy', {
 			title: 'Here are tons of fluffy dogs! Keep clicking for more!',
 			url: url,
-			titleBar: 'Random Dog Generator'
+			titleBar: 'Random Dog Generator',
+			titlePic: 'doggo'
 		}) 
 		});
 
@@ -495,7 +505,8 @@ createWebAppPage('/foodresult','Pick the food, get the restaurant.', 'food');
 				res.render('tiny', {
 			title: 'Here are tons of tiny dogs! Keep clicking for more!',
 			url: url,
-			titleBar: 'Random Dog Generator'
+			titleBar: 'Random Dog Generator',
+			titlePic: 'doggo'
 		}) 
 		});
 
@@ -508,7 +519,8 @@ createWebAppPage('/foodresult','Pick the food, get the restaurant.', 'food');
 				res.render('smile', {
 			title: 'Here are tons of dogs smiling! Keep clicking for more!',
 			url: url,
-			titleBar: 'Random Dog Generator'
+			titleBar: 'Random Dog Generator',
+			titlePic: 'doggo'
 		}) 
 		});
 
@@ -522,7 +534,8 @@ createWebAppPage('/foodresult','Pick the food, get the restaurant.', 'food');
 				res.render('driving', {
 			title: 'Here are tons of dogs driving cars! Keep clicking for more!',
 			url: url,
-			titleBar: 'Random Dog Generator'
+			titleBar: 'Random Dog Generator',
+			titlePic: 'doggo'
 		}) 
 		});
 
