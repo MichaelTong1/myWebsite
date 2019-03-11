@@ -86,9 +86,9 @@ console.log(error);
 
 // yelp api start
 
-function initializeYelpAPI(Lat, Lng) {
+function initializeYelpAPI(inputLocation) {
     // Setting URL and headers for request
-    var inputURL = 'https://api.yelp.com/v3/businesses/search?&term=food&latitude=' + Lat + '&longitude=' + Lng;
+    var inputURL = 'https://api.yelp.com/v3/businesses/search?&term=food&location=\'' + inputLocation + '\'';
     var options = {
         url: inputURL,
         headers:{
@@ -343,18 +343,10 @@ function createWebAppPage(theURL, theTitle, theRender)
 app.post(theURL, function(req, res) {
 	var i; 
 	var YR = []; // Yelp Result
-	var lat;
-	var lon;
 
 	var textfield = req.body.textfield;
 
-cities.filter(city => {
-  console.log(city.name.match('Albuquerque')[0])
-})
-
-
-
-	var YelpResponse = initializeYelpAPI(lat, lon);
+	var YelpResponse = initializeYelpAPI(textfield);
 	YelpResponse.then(function(YelpResult) {
 
 		for (i = 0; i < 20; i++)
@@ -362,6 +354,7 @@ cities.filter(city => {
 		YR.push(YelpResult.businesses[i].url);
 		YR.push(YelpResult.businesses[i].image_url);
 		}
+
         	res.render(theRender, {
 		
 		title: theTitle, titleBar: 'Reverse Restaurant Look-Up',
@@ -385,12 +378,12 @@ cities.filter(city => {
 // Food look-up web app
 //createWebAppPage('/foodwebapp','Your eyes eat first.','food');
 
-createWebAppPage('/foodresult','Your eyes eat first.', 'food');
+createWebAppPage('/foodresult','Pick the food, get the restaurant.', 'food');
 
 
 	app.get('/foodwebapp',function(req,res) {
 		res.render('foodstart', {
-			title: 'Your eyes eat first.',
+			title: 'Pick a location',
 			titleBar: 'Reverse Restaurant Look-Up'
 		});
 	});
