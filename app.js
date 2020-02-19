@@ -36,8 +36,11 @@ var fs = require('fs');
 // Start HTTPS try
 
 
-app.listen(8181, 'localhost');
+// Uncomment for local 
+//app.listen(8181, 'localhost');
 
+// Trying this for Heroku:
+app.listen(process.env.PORT)
 
 const privateKey = fs.readFileSync(__dirname + '/public/encryption/privatekey.pem', 'utf8');
 const certificate = fs.readFileSync(__dirname + '/public/encryption/certificate.pem', 'utf8');
