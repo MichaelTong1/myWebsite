@@ -209,13 +209,13 @@ app.get(theURL, function(req, res) {
 	InstaResponse.then(function(InstaResult) {
 
 		var IR = []
-
+/*
 		for (i = 0; i < 6; i++)
 	{
 		IR.push(InstaResult.data[i].images.standard_resolution.url);
 		IR.push(InstaResult.data[i].link);
 	}
-
+*/
 
 
 
