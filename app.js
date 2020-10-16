@@ -37,10 +37,10 @@ var fs = require('fs');
 
 
 // Uncomment for local 
-//app.listen(8181, 'localhost');
+app.listen(8181, 'localhost');
 
 // Trying this for Heroku:
-app.listen(process.env.PORT)
+//app.listen(process.env.PORT)
 
 const privateKey = fs.readFileSync(__dirname + '/public/encryption/privatekey.pem', 'utf8');
 const certificate = fs.readFileSync(__dirname + '/public/encryption/certificate.pem', 'utf8');
@@ -191,7 +191,7 @@ client.get('statuses/user_timeline', params, function(error, tweets, response) {
 
   }
   else {
-  	reject(err);
+  	// Twitter broke, ignore here
   }
 });})
 
@@ -204,18 +204,18 @@ function createPage(theURL, theTitle, theRender)
 app.get(theURL, function(req, res) {
 	var i; 
 // Instagram API
-/* UnComment 303
+
 	var InstaResponse = initializeInstagramAPI();
 	InstaResponse.then(function(InstaResult) {
 
 		var IR = []
-
+/*
 		for (i = 0; i < 6; i++)
 	{
 		IR.push(InstaResult.data[i].images.standard_resolution.url);
 		IR.push(InstaResult.data[i].link);
 	}
-
+*/
 
 
 
@@ -300,7 +300,7 @@ app.get(theURL, function(req, res) {
         }, function(err) {
         console.log(err);
     })
-  207  */ 
+    
 });
 }
 
