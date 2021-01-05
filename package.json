@@ -19,7 +19,7 @@
   "homepage": "https://github.com/MichaelTong1/expressintro#readme",
   "dependencies": {
     "all-the-cities": "^2.0.1",
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "body-parser": "^1.18.3",
     "cryptiles": "^4.1.3",
     "ejs": "^2.6.1",
